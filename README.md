@@ -58,6 +58,7 @@ git pull
 git pull --rebase    ; differences with the previous one
 git push
 
+###### do a pull request on github / gitlab
 
 ###### play with cherry-pick
 
