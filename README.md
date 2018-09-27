@@ -3,6 +3,12 @@ Git - Basics operations and how to use it from the command line
 
 ######### TODO    lab to be made
 
+some internal content to be inspired
+https://docs.google.com/presentation/d/1Mb5-LCGBXjNXJh0n3Tto9MOQzEQLeXlhcW5MqATHmAw/edit#slide=id.p46
+https://drive.google.com/drive/u/1/folders/1Uxv2SasAy0Cu-8Bnpwy6Fx9ELizCpk79?ogsrc=32
+
+
+
 ###### system
 
 - see the differences between config scope: https://gist.github.com/lifuzu/9490352
