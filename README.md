@@ -1,20 +1,87 @@
 # git-command-line-lab
-Git - Basics operations and how to use it from the command line
+Git is a widely used system for version control. This lab focuses on core git operations that will help you to become more productive from the command line.
 
-######### TODO    lab to be made
+`git help <command>`
 
-some internal content to be inspired
-https://docs.google.com/presentation/d/1Mb5-LCGBXjNXJh0n3Tto9MOQzEQLeXlhcW5MqATHmAw/edit#slide=id.p46
-https://drive.google.com/drive/u/1/folders/1Uxv2SasAy0Cu-8Bnpwy6Fx9ELizCpk79?ogsrc=32
+## Intro
+
+## Conguration Scope
+
+Configuration for git is not just about .gitignore files which usefully exclude files from being added to git source control.
+
+For git, configuration exists at three different levels: *System* (`/etc/gitconfig`), *Global* (` ~/.gitconfig`) and *Project* (`.git/config`). These are accessed via the `git config` command. For a quick description of these (level, location, creation of a config) see URL : https://gist.github.com/lifuzu/9490352
+
+Alternatively, if you run the command `git help config` you will see also see a description similar to this in the forth paragraph, along with additional documentation for each option in the help docs.
+
+The order that the files are read is system, global, then local, with the last (local) value taking precedence.
+
+### Update your Global scope configuration
+
+If we want to update global configuration settings, we can do this in a few ways (using the options that you can find in the git help files).
+
+For example: 
+
+`git config --edit --global` will open the config file in your default editor.
 
 
+The file you open will look something like the following example which is from `git help config` under heading 'EXAMPLES'.
 
-###### system
 
-- see the differences between config scope: https://gist.github.com/lifuzu/9490352
-- configure your name and email address in global
-- see it is updating ~/.gitconfig
-- add basics aliases in  ~/.gitconfig fro example
+ 
+            #
+                       # This is the config file, and
+                       # a '#' or ';' character indicates
+                       # a comment
+                       #
+            ; core variables
+            [core]
+                    ; Don't trust file modes
+                    filemode = false
+ 
+            ; Our diff algorithm
+            [diff]
+                    external = /usr/local/bin/diff-wrapper
+                    renames = true
+ 
+            ; Proxy settings
+            [core]
+                    gitproxy=proxy-command for kernel.org
+                    gitproxy=default-proxy ; for all the rest
+ 
+            ; HTTP
+            [http]
+                    sslVerify
+            [http "https://weak.example.com"]
+                    sslVerify = false
+                    cookieFile = /tmp/cookie.txt
+
+
+Alternatively it's possible to simply list your settings directly using:
+ 
+`git config --global --list`
+
+It's also possible to access and set fields individually.
+
+For example, to read an individual field:
+
+`git config --global --get user.name`
+
+Or to remove an individual field:
+
+`git config --global --unset user.name`
+
+To set your name:
+
+`git config --global --add user.name 'Your Name'`
+
+#### To do:
+
+* configure your name and email address in global
+* see it is updating global config in ~/.gitconfig
+* update any other settings, for example default editors etc
+* add basics aliases to your git config, for example:
+
+```
 
 [user]
 	name = Erwan Alliaume
@@ -28,33 +95,158 @@ https://drive.google.com/drive/u/1/folders/1Uxv2SasAy0Cu-8Bnpwy6Fx9ELizCpk79?ogs
         cp = cherry-pick
         gb = branch
         
-###### create a project and basics operation
+```
+`git config --global --add alias.ci commit`
 
+Formatted reference:
+
+https://git-scm.com/docs/git-config
+        
+## Create a Project
+
+### Initialise a project
+
+Create a new directory and initialise a project.
+
+```
 mkdir toto
 cd toto
-git init         
+git init 
+```
+We will use this project to investigate how changes to files can be added to a repository. Run the following commands to create a basic readme file, add these files to git.
+
+``` 
 echo hello > README.md
-git add .
-git status                      show the staging area and explain what is it
-git commit -m 'update readme'   
-git log -1     show le last commit
+git add .   
+git status                 
+```
 
-echo "second line" >> README.md
-git add .
-git commit --amend             how to update the last commit
+### Staging
 
+Files which have been added to git are now in the 'staging' area. The command `git add .` adds all files to the staging area. Essentially the staging area stores information about what will go into the next commit.
 
+In this case the files have been added to git, but not yet committed. The status command shows the working tree status which shows the files that will be commited (in this case all have been added), as well as what may not yet be tracked by git. 
 
-###### create a branch
+If we add another change to our file `echo world >> README.md` and check `git status` again, we will see that some changes are ready to be committed, while others are not yet staged for commit. Add this change to staging.
 
-git checkout -b my-new-branch
-do some commit on the branch
-git log on the branch see new commit
-go back to master, don't see the new commits :   git co master
-merge la branch sur master: git merge my-new-branch
+Another way to interact with staging is to use `git add -i` which can be used to interactively add files to the staging area.
 
-###### differences between merge an rebase
+Additionally, the diff of the files added to staging can be checked with `git diff --cached`
+
+### Make a commit
+
+Go ahead and make a commit using the -m option to add a message.
+
+`git commit -m 'update readme'`
+
+And to show the log for the last commit:
+
+`git log -1`
+
+#### To do:
+
+* Add another line to the readme file, stage the file, and then use the `git commit --amend` option to amend the previous commit, rather than adding a new one. Use git log to check that you only have one commit.
+
+## Create a Branch
+
+Branches are typically used with git workflow strategies. This means that commits are not made directly on master, but rather are made on branches before being merged to master.
+
+Because we have been working on master, we can create a branch which is based on master (taking the current history and 'branching out' from there), by using the git checkout command:
+
+`git checkout -b my-new-branch`
+
+Swap between branches using checkout, in this case the `-b` is used to create a new branch.
+
+Additionally, some typical options for `git branch` are:
+
+`-l` List local branches
+`-r` List remote branches
+`-a` List local and remote branches
+`-d` Delete a branch
+
+#### To do:
+
+* Checkout a new branch, make a commit on the branch, check the log, and then switch back to master.
+
+Bonus: Inspect content of the commit with `git show <commit>`
+
+When back in master, check `git log`, you can see the commit from the branch does not show up - the history of the two branches has diverged, or forked. If we have completed some work or a series of commits on the branch we can now merge them.
+
+## Merge and Rebase - Integrating changes
+
+Now that we have a master and feature branch we can merge the feature branch back into master.
+
+`git merge my-new-branch`
+
+Check the logs again and you will see the commit has now been merged to master.
+
+### Difference between Merge and Rebase
+
+Both merge and rebase are concerned with integrating changes from one branch into another.
+
+#### About Merge
+
+Merge is non-destructive (does not modify history), but involves creating extra commits.
+
+* Creates a new commit for *every* merge which ties together the changes from both branches
+* It's non destructive, meaning that existing branches are not changed
+* If you are working on a feature and need to incorporate changes from master into your branch, you will have to merge master into your branch resulting in additional commits as a result of the merges
+
+#### About Rebase
+
+Rebase is destructive (modifies history), but can result in a linear history.
+
+* Moves all commits to the tip of the branch that it is being rebased onto.
+* You will not create a new commit just for the purpose of merging
+* Results in a linear history
+* Potential danger - never use on public branches!
+* A good way to clean up local branches and incorporate changes from a parent branch.
+
+If someone else has a copy of your branch make changes non-destructively, be careful!
+
+git revert
+
+For example:
+``
+
 https://www.atlassian.com/git/tutorials/merging-vs-rebasing
+see help docs for more
+
+#### To do:
+
+Add some commits to master, then rebase the feature branch
+Make multiple commits on master and a branch and compare the difference between merge and rebase.
+
+## Remote
+
+## Pull Requests
+
+## Cherry Pick
+
+## Stash, Reset, Revert
+
+## Rewrite History
+
+## Force with lease
+
+## Alias and Plugins
+
+Additional references:
+Formatted git pages
+Atlassian
+
+
+######### TODO    lab to be made
+
+some internal content to be inspired
+https://docs.google.com/presentation/d/1Mb5-LCGBXjNXJh0n3Tto9MOQzEQLeXlhcW5MqATHmAw/edit#slide=id.p46
+https://drive.google.com/drive/u/1/folders/1Uxv2SasAy0Cu-8Bnpwy6Fx9ELizCpk79?ogsrc=32
+
+   
+
+
+
+
 
 ###### play with remote
 
@@ -181,6 +373,10 @@ pr
 
 
 
+
+
+force 
+One of the only times you should be force-pushing is when you’ve performed a local cleanup after you’ve pushed a private feature branch to a remote repository (
 
         
 
