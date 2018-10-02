@@ -186,13 +186,17 @@ Both merge and rebase are concerned with integrating changes from one branch int
 
 #### About Merge
 
+`git merge <branch>`
+
 Merge is non-destructive (does not modify history), but involves creating extra commits.
 
 * Creates a new commit for *every* merge which ties together the changes from both branches
 * It's non destructive, meaning that existing branches are not changed
-* If you are working on a feature and need to incorporate changes from master into your branch, you will have to merge master into your branch resulting in additional commits as a result of the merges
+* If you are working on a feature and need to incorporate changes from master into your branch, you will have to merge master into your branch resulting in additional commits as a result of the merges `git pull`
 
 #### About Rebase
+
+`git rebase <branch>`
 
 Rebase is destructive (modifies history), but can result in a linear history.
 
@@ -200,110 +204,182 @@ Rebase is destructive (modifies history), but can result in a linear history.
 * You will not create a new commit just for the purpose of merging
 * Results in a linear history
 * Potential danger - never use on public branches!
-* A good way to clean up local branches and incorporate changes from a parent branch.
+* A good way to clean up local branches and incorporate changes from a parent branch eg `git pull --rebase`
 
-If someone else has a copy of your branch make changes non-destructively, be careful!
-
-git revert
-
-For example:
-``
-
-https://www.atlassian.com/git/tutorials/merging-vs-rebasing
-see help docs for more
+If someone else has a copy of your branch be very careful!
 
 #### To do:
 
-Add some commits to master, then rebase the feature branch
-Make multiple commits on master and a branch and compare the difference between merge and rebase.
+Take the time to try out a merge and then a rebase using your projects branches and inspect the difference.
 
 ## Remote
 
+A remote is a repository that contains the branches that you track for a given project.
+
+
+### Play with remote
+
+Git maintains a record of the location of a remote repository. You can check the current remote using `git remote -v`. If you have been following along and started a project from scratch using `git init` you may not have a remote yet, you could open an existing project and inspect the remote or you can add a remote to your current project now.
+
+To add a remote to your project:
+
+You can add the origin for a remote and fetch the existing branches from the remote.
+
+For example, you could add the repository https://github.com/wjt866/git-command-line-lab.git (or your own one - just start a new repo of github), check that it has been added as a remote, and then fetch any changes.
+
+```
+git remote add origin <URL>
+git remote -v
+git fetch 
+```
+
+While working on a branch it will be necessary to regularly synchronise the local branch with the remote branch it tracks, in order to integrate recent changes into your branch. 
+
+There are two options for this.
+```
+git pull 
+git pull --rebase
+```
+Git pull will perform a merge, whereas git pull --rebase will perform a rebase. See above for a description of the difference between merge and rebase, however _a rebase if often a useful way to update local branches from a remote._
+
+Difference between pull and fetch: Git pull performs both a fetch and merge (or rebase if given as an option). A fetch is a useful way to update local branches which track remotes - it won't actually change your working copy. So for example, if you want to see/inspect the latest work on a remote branch you will need to fetch in order to have the most recent up to date work. So fetch will retrieve information from the repository, with the option to merge it, while pull will automatically try and merge the changes.
+
+Of course local changes that have been committed can also be pushed back up to the remote branch easily:
+
+```
+git push
+```
+
 ## Pull Requests
+### Do a pull request on github / gitlab / bitbucket etc
+
+When work on a branch is completed it's time to do a pull request. The exact process can be different depending on where the source code is hosted. Typically a PR is made using the gui, and allows other to review code before it is merged.
+
+#### To do
+
+* Make a pull request for a project of your choice in gitlab, github, bitbucket etc. It could be for your own project or for this one (For example change this random word: 'random').
 
 ## Cherry Pick
 
+A cherry pick is a way to take one or more commits from a branch and then to add those same commits to another branch. It is useful when you need to integrate only some recent changes from a branch and need to exclude other older commits.
+
+### Cherry pick a single commit
+
+The simplest way to demonstrate cherry pick is to add a commit to a second branch, and then cherry-pick just the one commit onto another branch.
+
+```
+echo again >> README.md
+git add .
+git commit -m 'adding another line for a cherry pick'
+git checkout master
+git cherry-pick my-new-branch
+```
+If you run `git log` you will now see the commit has been added to master.
+
+### Cherry pick multiple commits
+
+It's often common to cherry-pick more than one commit.
+
+In this case, we will need some more information about which commits to pick. Retrieve the commit ID by using `git log --oneline` when on the branch you want to cherry pick from.
+
+Then swap back to master and pick the commits you need, for example:
+
+```
+git cherry-pick ae8ee74 2da0c39
+```
+
 ## Stash, Reset, Revert
+
+### Stash
+When working there will often be times when you wish to change branches but are not ready to commit the current changes yet. In this case you can 'stash' changes using `git stash` and retrieve them when needed using `git stash pop`
+
+### Reset
+
+Resetting a branch means that commits can be thrown away from history.
+
+If you haven't already set up a remote for the project, do it now and make sure you push your work.
+
+Make a commit.
+
+```
+echo something >> README.md
+git add .
+git commit -m 'commit for testing a reset'
+```
+
+Check that the commit has been added with `git log`. Now reset your branch back to master using git reset.
+
+To hard reset and get the code from master:
+
+`git reset --hard origin/master`
+
+To perform a soft reset:
+
+`git reset --soft origin/master`
+
+#### To do
+
+Try both a hard and soft reset. What's the difference? Check the log before and the status after resetting to observe the difference.
+
+### Revert
+
+Reverting changes means that a new commit is made which reverts changes that previous commits have introduced.
+
+Make a commit, then, after checking the hash of the commit via a log:
+
+```
+git revert <hash>
+```
+
 
 ## Rewrite History
 
+### Amend the last commit
+
+It's easy to amend a previous commit, rather than add an entirely new one (for example, to fix a mistake).
+
+To update the last commit:
+
+```
+echo "first line" > README.md
+git add  README.md
+git commit -m 'a commit message'
+echo "second line" >> README.md
+git add README.md
+git commit --amend
+```
+
+#### Rewrite local history
+
+Local history can be re-written to clean up a branch before pushing it to a remote repository.
+
+`git rebase --interactive <hashLastPushedCommit>`
+
+##### To do:
+
+Make a bunch of commits (but don't push them), then rebase from the start of these commits
+Then rebase interactively to tidy them, using squash, reword, drop, etc
+
 ## Force with lease
+### Reduce the risk of destroying other peoples work
+
+If you accidentally pushed some local changes before rebasing them, you would need to do a `--force` push because you would be changing the history of the remote and this is not normally allowed.
+
+But there is a problem with `git push --force`.
+ 
+It will cause the remote repository to lose commits unconditionally and as is not always 'safe'. For exampel, if a team member has recently committed some work to a branch without you knowing you could overwrite their work. This could easily happen during a routine rebase from master which then erases a team members work.
+
+Enter `git push --force-with-lease`
+
+Force with lease helps to ensure that the repository is in the state we expect, allowing us to force push without the ability to overwrite other peoples work.
+
+For a good blog about this see: https://developer.atlassian.com/blog/2015/04/force-with-lease/
 
 ## Alias and Plugins
 
-Additional references:
-Formatted git pages
-Atlassian
+Have a look at the config file at the bottom of the page, and investigate some of the aliases (and add them to your own config), you might want to start with the following:
 
-
-######### TODO    lab to be made
-
-some internal content to be inspired
-https://docs.google.com/presentation/d/1Mb5-LCGBXjNXJh0n3Tto9MOQzEQLeXlhcW5MqATHmAw/edit#slide=id.p46
-https://drive.google.com/drive/u/1/folders/1Uxv2SasAy0Cu-8Bnpwy6Fx9ELizCpk79?ogsrc=32
-
-   
-
-
-
-
-
-###### play with remote
-
-git remote add origin URL
-git fetch 
-git pull 
-git pull --rebase    ; differences with the previous one
-git push
-
-###### do a pull request on github / gitlab
-
-###### play with cherry-pick
-
-create a branch do a commit
-come back to master, cherry pick the commit from the other branch
-
-###### play with stash, reset and revert
-
-do some commit
-git reset --hard origin/master ; to get the code from master
-do some update (not committed)
-git stash    ; to put changes on the stack
-git stash pop    ; to get them back
-git commit ...    
-git reset --soft origin/master   ; differences with Hard
-git commit ...
-git revert <hash>  ; see it is generating a new commuit in the reflog
-
-####### rewrite history
-
-######### amend last commit
-
-echo "first line" > README.md
-git add  README.md
-git commit -m 'xxxxx'
-echo "second line" >> README.md
-git add README.md
-git commit --amend             how to update the last commit
-
-######### rewrite local history
-
-do few commits: push one a remote
-do few more commit (don't push)
-
-git rebase --interactive <hashLastPushedCommit>
-squash, rename, remove, reorder commit
-
-######### explain --force-with-lease
-
-if you rewrote part of the history of something already push
-you need --force
-but --force is dangerous
---force-with-lease is better and explain why
-
-####### more alias and plugins
-
-pick some of those, at least, it is the one i'm using everyday
+```
 lg
 undo
 who
@@ -311,8 +387,25 @@ last
 wip
 unwip
 pr
+```
 
+## What you learnt
 
+* How to customise git configuration
+* How to create a project, make commits and understand staging
+* How to work with branches
+* The difference between merge and rebase
+* What remotes are and how to add one
+* How to cherry-pick commits
+* Handy commands like stash, revert, reset
+* How to rewrite local history with interactive rebases
+* How to be safer when force pushing by using --force-with-lease
+
+## Next steps
+
+* Add some additional plugins and/or aliases to your git config, you might want to take some inspiration from below:
+
+```
 [user]
 	name = Erwan Alliaume
 	email = ealliaumeWWWWWWWocto.com
@@ -369,16 +462,16 @@ pr
 [core]
 	autocrlf = false
 	excludesfile = /Users/erwan/.gitignore
+```
+## Further resources
 
+There are many many resources to help you continue learning about git. Some useful ones are:
 
+* `git help <command>`
+* Atlassian git tutorials
+* Online version of the man pages https://git-scm.com/doc
 
-
-
-
-force 
-One of the only times you should be force-pushing is when you’ve performed a local cleanup after you’ve pushed a private feature branch to a remote repository (
-
-        
+Thanks : )
 
 
 
