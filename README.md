@@ -29,10 +29,10 @@ The file you open will look something like the following example which is from `
 
  
             #
-                       # This is the config file, and
-                       # a '#' or ';' character indicates
-                       # a comment
-                       #
+            # This is the config file, and
+            # a '#' or ';' character indicates
+            # a comment
+            #
             ; core variables
             [core]
                     ; Don't trust file modes
@@ -85,7 +85,7 @@ To set your name:
 
 [user]
 	name = Erwan Alliaume
-	email = ealliaumeXXXXXocto.com
+	email = notReallyMyEmail@octo.com
 [alias]
         ci = commit
         st = status
@@ -408,7 +408,7 @@ pr
 ```
 [user]
 	name = Erwan Alliaume
-	email = ealliaumeWWWWWWWocto.com
+	email = notReallyMyEmail@octo.com
 [color]
 	diff = auto
 	status = auto
