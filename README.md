@@ -2,6 +2,8 @@
 
 This lab is part of the [foundations trainings](https://github.com/octo-technology-downunder/octo-au-foundations) in place at [OCTO Technology Australia](http://careers.octo.com.au/).
 
+This lab might take you approximately 1h30 / 2h to complete, including the game !
+
 Git is a widely used system for version control. This lab focuses on core git operations that will help you to become more productive from the command line.
 
 `git help <command>`
