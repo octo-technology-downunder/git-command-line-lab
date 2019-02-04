@@ -211,7 +211,8 @@ Rebase is destructive (modifies history), but can result in a linear history.
 * Potential danger - never use on public branches!
 * A good way to clean up local branches and incorporate changes from a parent branch eg `git pull --rebase`
 
-If someone else has a copy of your branch be very careful!
+If someone else has a copy of your branch be very careful, you shouldn't consider using rebase !
+For additional informations, please take a look here https://www.atlassian.com/git/tutorials/merging-vs-rebasing !
 
 #### To do:
 
