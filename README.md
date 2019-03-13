@@ -263,7 +263,7 @@ When work on a branch is completed it's time to do a pull request. The exact pro
 
 #### To do
 
-* Make a pull request for a project of your choice in gitlab, github, bitbucket etc. It could be for your own project or for this one (For example change this random word: 'random').
+* Make a pull request for a project of your choice in gitlab, github, bitbucket etc. It could be for your own project or for this one (For example change this random word: 'SHEL').
 
 ## Cherry Pick
 
