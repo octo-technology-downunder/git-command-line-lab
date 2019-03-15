@@ -1,22 +1,39 @@
 # git-command-line-lab
 
-This lab is part of the [foundations trainings](https://github.com/octo-technology-downunder/octo-au-foundations) in place at [OCTO Technology Australia](http://careers.octo.com.au/).
+This lab is part of the [foundations training](https://github.com/octo-technology-downunder/octo-au-foundations) in place at [OCTO Technology Australia](http://careers.octo.com.au/).
 
-It might take you approximately 1h30 / 2h to complete, including the game !
+It might take you approximately 1h30/2h to complete, including the game!
 
 Git is a widely used system for version control. This lab focuses on core git operations that will help you to become more productive from the command line.
 
 `git help <command>`
 
 ## Intro
+This Lab will cover the following:
 
-## Conguration Scope
+* [Configuration Settings](#configuration-settings)
+* [Creating a Project](#create-a-project)
+* [Git Branches](#create-a-branch)
+* [Merge vs. Rebase - How to Integrate Changes](#merge-and-rebase---integrating-changes)
+* [Git Remotes](#remote)
+* [Pull Requests](#pull-requests)
+* [Cherry Picking](#cherry-pick)
+* [Undoing and Stashing Changes](#undoing-and-stashing-changes)
+* [Rewriting Git History](#rewrite-history)
+* [Safe Practises Using Git Force](#force-with-lease)
+
+## Configuration Settings
 
 Configuration for git is not just about .gitignore files which usefully exclude files from being added to git source control.
 
-For git, configuration exists at three different levels: *System* (`/etc/gitconfig`), *Global* (` ~/.gitconfig`) and *Project* (`.git/config`). These are accessed via the `git config` command. For a quick description of these (level, location, creation of a config) see URL : https://gist.github.com/lifuzu/9490352
+For git, configuration exists at three different levels: 
+* *System* (`/etc/gitconfig`)
+* *Global* (` ~/.gitconfig`)
+* *Project* (`.git/config`)
+ 
+ These are accessed via the `git config` command. For a quick description of these (level, location, creation of a config) follow this [link](https://gist.github.com/lifuzu/9490352).
 
-Alternatively, if you run the command `git help config` you will see also see a description similar to this in the forth paragraph, along with additional documentation for each option in the help docs.
+Alternatively, if you run the command `git help config` you will find additional documentation for each option in the help docs.
 
 The order that the files are read is system, global, then local, with the last (local) value taking precedence.
 
@@ -61,13 +78,11 @@ The file you open will look something like the following example which is from `
                     cookieFile = /tmp/cookie.txt
 
 
-Alternatively it's possible to simply list your settings directly using:
+Alternatively you can list your settings on the command line using:
  
 `git config --global --list`
 
-It's also possible to access and set fields individually.
-
-For example, to read an individual field:
+It's also possible to access and set fields individually. For example, to read an individual field:
 
 `git config --global --get user.name`
 
@@ -81,10 +96,10 @@ To set your name:
 
 #### To do:
 
-* configure your name and email address in global
-* see it is updating global config in ~/.gitconfig
-* update any other settings, for example default editors etc
-* add basics aliases to your git config, for example:
+* Configure your name and email address in the global config settings
+* Check it is updating global config in ~/.gitconfig
+* Update any other settings, for example default editors etc.
+* Add basic aliases to your git config, for example:
 
 ```
 
@@ -128,25 +143,27 @@ git status
 
 ### Staging
 
-Files which have been added to git are now in the 'staging' area. The command `git add .` adds all files to the staging area. Essentially the staging area stores information about what will go into the next commit.
+The `git add .` command adds all files to the 'staging' area. Essentially the staging area stores information about what will go into the next commit.
 
-In this case the files have been added to git, but not yet committed. The status command shows the working tree status which shows the files that will be commited (in this case all have been added), as well as what may not yet be tracked by git. 
+Now the files have been added to git, but have not yet been committed to the repository. The `git status` command shows the working tree status which lists the files that will be committed (in this case all have been added), as well as files may not yet be tracked by git. 
 
-If we add another change to our file `echo world >> README.md` and check `git status` again, we will see that some changes are ready to be committed, while others are not yet staged for commit. Add this change to staging.
+If we add another change to our file `echo world >> README.md` and run `git status` again, we will see that some changes are ready to be committed, while others are not yet staged for commit. Add this change to staging.
 
 Another way to interact with staging is to use `git add -i` which can be used to interactively add files to the staging area.
 
-Additionally, the diff of the files added to staging can be checked with `git diff --cached`
+Additionally, you can compare the files added to staging with `git diff --cached`
 
 ### Make a commit
 
-Go ahead and make a commit using the -m option to add a message.
+Go ahead and make a commit using the -m option to add a message. This is good practise to briefly describe the  changes being made to the repo.
 
 `git commit -m 'update readme'`
 
 And to show the log for the last commit:
 
 `git log -1`
+
+It's also possible to list the log history using `git log` or for a more succinct list `git log --oneline`
 
 #### To do:
 
@@ -164,18 +181,18 @@ Swap between branches using checkout, in this case the `-b` is used to create a 
 
 Additionally, some typical options for `git branch` are:
 
-`-l` List local branches
-`-r` List remote branches
-`-a` List local and remote branches
-`-d` Delete a branch
+* `-l` List local branches
+* `-r` List remote branches
+* `-a` List local and remote branches
+* `-d` Delete a branch
 
 #### To do:
 
 * Checkout a new branch, make a commit on the branch, check the log, and then switch back to master.
 
-Bonus: Inspect content of the commit with `git show <commit>`
+**Bonus:** Inspect content of the commit with `git show <commit>`
 
-When back in master, check `git log`, you can see the commit from the branch does not show up - the history of the two branches has diverged, or forked. If we have completed some work or a series of commits on the branch we can now merge them.
+Checkout the master branch and run `git log`, you can see the commit from the branch does not show up - the history of the two branches has diverged, or forked. If we have completed some work or a series of commits on the branch we can now merge them.
 
 ## Merge and Rebase - Integrating changes
 
@@ -196,42 +213,42 @@ Both merge and rebase are concerned with integrating changes from one branch int
 Merge is non-destructive (does not modify history), but involves creating extra commits.
 
 * Creates a new commit for *every* merge which ties together the changes from both branches
-* It's non destructive, meaning that existing branches are not changed
+* It's non-destructive, meaning that existing branches are not changed
 * If you are working on a feature and need to incorporate changes from master into your branch, you will have to merge master into your branch resulting in additional commits as a result of the merges `git pull`
+
+![Alt](https://wac-cdn.atlassian.com/dam/jcr:e229fef6-2c2f-4a4f-b270-e1e1baa94055/02.svg?cdnVersion=ld )
 
 #### About Rebase
 
 `git rebase <branch>`
 
-Rebase is destructive (modifies history), but can result in a linear history.
+Rebase is destructive (modifies project history), but can result in a linear history.
+
+![Alt](https://wac-cdn.atlassian.com/dam/jcr:5b153a22-38be-40d0-aec8-5f2fffc771e5/03.svg?cdnVersion=ld)
 
 * Moves all commits to the tip of the branch that it is being rebased onto.
 * You will not create a new commit just for the purpose of merging
 * Results in a linear history
-* Potential danger - never use on public branches!
+* **Golden Rule** - never use on public branches!
 * A good way to clean up local branches and incorporate changes from a parent branch eg `git pull --rebase`
 
-If someone else has a copy of your branch be very careful, you shouldn't consider using rebase !
-For additional informations, please take a look here https://www.atlassian.com/git/tutorials/merging-vs-rebasing !
+If someone else has a copy of your branch be very careful, you shouldn't consider using rebase!
+To read more follow the link https://www.atlassian.com/git/tutorials/merging-vs-rebasing.
 
 #### To do:
 
-Take the time to try out a merge and then a rebase using your projects branches and inspect the difference.
+Take the time to try out a merge and then a rebase using your projects branches and check the logs to inspect the difference.
 
 ## Remote
 
-A remote is a repository that contains the branches that you track for a given project.
+The remote command allows you manage the repositories (remotes) which contain the branches that you track for a given project.
 
 
 ### Play with remote
 
 Git maintains a record of the location of a remote repository. You can check the current remote using `git remote -v`. If you have been following along and started a project from scratch using `git init` you may not have a remote yet, you could open an existing project and inspect the remote or you can add a remote to your current project now.
 
-To add a remote to your project:
-
-You can add the origin for a remote and fetch the existing branches from the remote.
-
-For example, you could add the repository https://github.com/wjt866/git-command-line-lab.git (or your own one - just start a new repo of github), check that it has been added as a remote, and then fetch any changes.
+You can add the origin for a remote and fetch the existing branches from the remote. For example, you could add the repository https://github.com/wjt866/git-command-line-lab.git (or your own one - just set up a new repo of github), check that it has been added as a remote, and then fetch any changes.
 
 ```
 git remote add origin <URL>
@@ -248,7 +265,8 @@ git pull --rebase
 ```
 Git pull will perform a merge, whereas git pull --rebase will perform a rebase. See above for a description of the difference between merge and rebase, however _a rebase if often a useful way to update local branches from a remote._
 
-Difference between pull and fetch: Git pull performs both a fetch and merge (or rebase if given as an option). A fetch is a useful way to update local branches which track remotes - it won't actually change your working copy. So for example, if you want to see/inspect the latest work on a remote branch you will need to fetch in order to have the most recent up to date work. So fetch will retrieve information from the repository, with the option to merge it, while pull will automatically try and merge the changes.
+###Difference between pull and fetch
+`git pull` performs both a fetch and merge (or rebase if given as an option). A fetch is a useful way to update local branches which track remotes - it won't actually change your working copy. So for example, if you want to see/inspect the latest work on a remote branch you will need to fetch in order to have the most up to date work. So fetch will retrieve information from the repository, with the option to merge it, while pull will automatically try and merge the changes.
 
 Of course local changes that have been committed can also be pushed back up to the remote branch easily:
 
@@ -259,15 +277,15 @@ git push
 ## Pull Requests
 ### Do a pull request on github / gitlab / bitbucket etc
 
-When work on a branch is completed it's time to do a pull request. The exact process can be different depending on where the source code is hosted. Typically a PR is made using the gui, and allows other to review code before it is merged.
+When work on a branch is completed it's time to do a pull request. The exact process can be different depending on where the source code is hosted. Typically a PR is made using the GUI, and allows others to review code before it is merged.
 
 #### To do
 
-* Make a pull request for a project of your choice in gitlab, github, bitbucket etc. It could be for your own project or for this one (For example change this random word: 'SHEL').
+* Make a pull request for a project of your choice in gitlab, github, bitbucket etc. It could be for your own project or for this one (For example change this random word: 'RANDOM').
 
 ## Cherry Pick
 
-A cherry pick is a way to take one or more commits from a branch and then to add those same commits to another branch. It is useful when you need to integrate only some recent changes from a branch and need to exclude other older commits.
+The cherry pick command allows you to take one or more commits from a branch and then to add those same commits to another branch. It is useful when you need to integrate only some recent changes from a branch and need to exclude other older commits.
 
 ### Cherry pick a single commit
 
@@ -280,7 +298,7 @@ git commit -m 'adding another line for a cherry pick'
 git checkout master
 git cherry-pick my-new-branch
 ```
-If you run `git log` you will now see the commit has been added to master.
+Run `git log` to see the commit has been added to master.
 
 ### Cherry pick multiple commits
 
@@ -294,7 +312,7 @@ Then swap back to master and pick the commits you need, for example:
 git cherry-pick ae8ee74 2da0c39
 ```
 
-## Stash, Reset, Revert
+## Undoing and Stashing Changes
 
 ### Stash
 When working there will often be times when you wish to change branches but are not ready to commit the current changes yet. In this case you can 'stash' changes using `git stash` and retrieve them when needed using `git stash pop`
@@ -313,7 +331,7 @@ git add .
 git commit -m 'commit for testing a reset'
 ```
 
-Check that the commit has been added with `git log`. Now reset your branch back to master using git reset.
+Check that the commit has been added with `git log`. Now reset your branch back to master using `git reset`.
 
 To hard reset and get the code from master:
 
@@ -373,7 +391,7 @@ If you accidentally pushed some local changes before rebasing them, you would ne
 
 But there is a problem with `git push --force`.
  
-It will cause the remote repository to lose commits unconditionally and as is not always 'safe'. For exampel, if a team member has recently committed some work to a branch without you knowing you could overwrite their work. This could easily happen during a routine rebase from master which then erases a team members work.
+It will cause the remote repository to lose commits unconditionally and as is not always 'safe'. For example, if a team member has recently committed some work to a branch without you knowing you could overwrite their work. This could easily happen during a routine rebase from master which then erases a team members work.
 
 Enter `git push --force-with-lease`
 
@@ -469,13 +487,17 @@ pr
 	autocrlf = false
 	excludesfile = /Users/erwan/.gitignore
 ```
+
+* Now put your new skills to the test with our [git game](https://github.com/git-game/git-game)
+
 ## Further resources
 
 There are many many resources to help you continue learning about git. Some useful ones are:
 
 * `git help <command>`
 * Atlassian git tutorials
-* Online version of the man pages https://git-scm.com/doc
+* Git [cheatsheet](https://www.atlassian.com/git/tutorials/atlassian-git-cheatsheet)
+* Online version of the manual https://git-scm.com/doc
 
 Thanks : )
 
